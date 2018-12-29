@@ -1,14 +1,13 @@
 <template>
-    <div class="CustomerOrder">
-    </div>
+  <div id="kitchenPage">
+      这是厨房页面
+  </div>
 </template>
 
 <script>
     export default {
-      name: "CustomerOrder",
-
+        name: "kitchenPage"
     }
-
 </script>
 
 <style scoped>

@@ -1,14 +1,14 @@
 <template>
-    <div class="CustomerOrder">
+    <div id="ManageHomePage">
+
+
     </div>
 </template>
 
 <script>
     export default {
-      name: "CustomerOrder",
-
+        name: "ManageHomePage"
     }
-
 </script>
 
 <style scoped>
