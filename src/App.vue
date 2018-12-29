@@ -33,6 +33,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
+}
+body{
+    margin-top: 0px;
+  }
+.el-submenu__title{
+  padding: 0 45px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.el-menu-item{
+  font-size: 18px;
+  font-weight: bold;
 }
 </style>

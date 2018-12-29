@@ -1,14 +1,13 @@
 <template>
   <!--背景图-->
   <div class = "note" :style = "note">
-
     <!--login框，表单+tab标签页的组合-->
     <div class = "loginFrame">
 
       <!--表单组件放在外面，标签栏在里面-->
        <!--rules属性传入验证规则-->
       <el-form ref = "AccountForm" status-icon :model = "AccountForm"  :rules = "rules"  class = "demo-ruleForm login-container">
-
+        <h1>餐厅点餐系统用户登陆页面</h1>
         <!--tab标签-->
         <div class = "tabsUser">
           <el-tabs v-model = "activeName" @tab-click = "handleClick" class = "users" style = "height: 30px;font-size: 25px">
@@ -147,9 +146,9 @@
     border-radius: 15px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
+    margin: 100px auto;
+    width: 400px;
+    padding: 20px 35px 15px 35px;
     background: rgba(255,255,255,0.7);
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;

@@ -11,8 +11,8 @@ export default new Router({
   routes: [
     {
       path:'/',
-      name: 'CustomerOrder',
-      component:CustomerOrder
+      name: 'ManageRegister',
+      component:ManageRegister
     },
     {
       path:'/CustomerOrder',
