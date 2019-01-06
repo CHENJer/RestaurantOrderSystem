@@ -6,9 +6,7 @@
 
 
 <script>
- /* import HelloWorld from './components/HelloWorld.vue'
-  import TEST from './components/test.vue'
-  import CustomerOrder from './components/CustomerOrder.vue'*/
+
 export default {
   name: 'App',
   data(){

@@ -5,10 +5,18 @@ import ManageRegister from '@/components/manage/ManageRegister.vue'
 import receptionPage from '@/components/manage/receptionPage.vue'
 import kitchenPage from '@/components/manage/kitchenPage.vue'
 import adminPage from '@/components/manage/adminPage.vue'
+import test from '@/components/test.vue'
+
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      /*测试页面*/
+      path:'/test',
+      name: 'test',
+      component:test
+    },
     {
       path:'/',
       name: 'ManageRegister',

@@ -7,9 +7,11 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import App from './App'
 import router from './router'
+import axios from 'axios';
 
 Vue.use(ElementUI);
 Vue.use(MintUI);
+Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
