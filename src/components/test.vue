@@ -1,7 +1,8 @@
 <template>
     <div class="back">
+      <input type="button"  @click="getData()" value="获取后台数据" /><br/><br/>
+      二维码：<br/><img :src="'data:image/jpg;base64,'+base64+''"><br/><br/>
 
-      {{serverData}}
     </div>
 </template>
 
@@ -10,24 +11,28 @@
       name: "back",
       data () {
         return {
-          serverData: '后端数据返回'
+          base64: '',
+          baseImg:'data:image/jpg;base64,'
         }
       },
       mounted: function () {
-        this.getData()
+        //this.getData()
       },
       methods: {
         getData()
         {
-
-          console.log('-------getData')
-
-          var that = this.$axios.get('http://192.168.2.196:8090/orderSystemManager_war_exploded/SystemManager/qrcodeimg')
-            .then(function (response) {
+          console.log('getDataing......')
+          /* then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。所以用变量来代替*/
+          var vuedate = this;
+          this.$axios.get('http://192.168.2.196:8090/orderSystemManager_war_exploded/SystemManager/qrcodeimg')
+            .then(function (response)
+            {
               console.log(response)
-              that.serverData = response.data
+              vuedate.base64 = response.data
+              //console.log("vuedate.base64:"+vuedate.base64)
             })
-            .catch(function (error) {
+            .catch(function (error)
+            {
               console.log(error)
             })
         }
