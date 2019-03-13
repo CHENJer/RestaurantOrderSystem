@@ -24,7 +24,7 @@
           console.log('getDataing......')
           /* then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。所以用变量来代替*/
           var vuedate = this;
-          this.$axios.get('http://192.168.2.196:8090/orderSystemManager_war_exploded/SystemManager/qrcodeimg')
+          this.$axios.get(this.COMMON.backUrl+'/orderSystem/SystemManager/qrcodeimg?tableNum=3A121')
             .then(function (response)
             {
               console.log(response)

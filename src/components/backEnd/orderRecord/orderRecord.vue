@@ -1,12 +1,12 @@
 <template>
-    <div class="Home">
-        <p>这是我的Home</p>
-    </div>
+  <div class="orderRecord">
+    订单记录
+  </div>
 </template>
 
 <script>
     export default {
-        name: "Home"
+        name: "orderRecord"
     }
 </script>
 

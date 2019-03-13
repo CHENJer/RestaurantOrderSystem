@@ -4,6 +4,9 @@
 
 ## Build Setup
 
+
+## 点餐页面
+使用better-scroll 实现点餐页面的左右联动
 ``` bash
 # install dependencies
 npm install

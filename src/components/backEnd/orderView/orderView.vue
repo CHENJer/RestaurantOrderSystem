@@ -1,12 +1,12 @@
 <template>
-  <div id="kitchenPage">
-      这是厨房页面
-  </div>
+    <div class="orderView">
+       订单视图
+    </div>
 </template>
 
 <script>
     export default {
-        name: "kitchenPage"
+        name: "orderView"
     }
 </script>
 

@@ -1,12 +1,12 @@
 <template>
-  <div id="receptionPage">
-      这是前台页面
-  </div>
+    <div class="kitchenFoodSet">
+       菜品设置
+    </div>
 </template>
 
 <script>
     export default {
-        name: "receptionPage"
+        name: "kitchenFoodSet"
     }
 </script>
 

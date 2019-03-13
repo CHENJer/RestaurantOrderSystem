@@ -9,7 +9,6 @@ function resolve (dir) {
 }
 
 
-
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -58,6 +57,13 @@ module.exports = {
         }
       },
       {
+
+        test: /\.less$/,
+
+        loader: "style-loader!css-loader!less-loader"
+
+      },
+      {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
@@ -66,6 +72,10 @@ module.exports = {
         }
       }
     ]
+  },
+  //内网映射设置
+  devServer: {
+    disableHostCheck: true,
   },
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue

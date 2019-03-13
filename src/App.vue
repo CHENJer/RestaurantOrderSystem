@@ -1,48 +1,36 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
+  <div class="app">
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
 
 <script>
-
+  import axios from 'axios'
+  const ERR_OK = 0
 export default {
   name: 'App',
   data(){
     return{
+      seller: {}
     }
+  },
+  created() {
+
   },
   methods:{
-    handleClick: function() {
-      this.$toast('Hello world!');
-    }
+
   },
-  components:{
+  components: {
 
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 0px;
-}
-body{
-    margin-top: 0px;
-  }
-.el-submenu__title{
-  padding: 0 45px;
-  font-size: 20px;
-  font-weight: bold;
-}
-.el-menu-item{
-  font-size: 18px;
-  font-weight: bold;
-}
+<style lang="stylus" rel="stylesheet/stylus">
+  /*由于图标被墙不显示，因此引入样式解决*/
+  //@import '//fonts.useso.com/css?family=Roboto:300,400,500,700,400italic';
+  @import 'http://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.css';
 </style>
