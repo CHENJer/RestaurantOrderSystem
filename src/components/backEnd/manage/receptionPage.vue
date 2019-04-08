@@ -2,24 +2,25 @@
   <div class="receptionPage">
     <el-row class="header">
       <el-col :span="4"><div :class="{OSName: isOSName}">餐厅点餐系统</div></el-col>
-      <el-col :span="16">
+      <el-col :span="14">
         <div :class="{NavButton: isButton}" style="font-size: 21px;font-weight: bold">
           前台服务界面
         </div>
       </el-col>
-      <el-col :span="4">
-        <div :class="{UserInfo: isInfo}">
-          <el-dropdown trigger="click">
-            <span class="el-dropdown-link" style="color:white">
-             <i class="el-icon-setting"></i>
-              <span class="user">欢迎admin登陆</span>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item @click.native="outToLogin()">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+      <el-col :span="6">
+        <div style="height:5px;"></div>
+        <el-dropdown trigger="click" style="position: absolute;right: 20%;top:15%">
+          <mu-avatar >
+            <!--<mu-icon value="assignment_ind"></mu-icon>-->
+            <img src="../../../assets/1.jpg">
+          </mu-avatar>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="outToLogin()">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <span style="font-size: 18px;font-weight: bolder;color: white;position: absolute;right: 3%;top:1%">
+                  欢迎您，张三
+        </span>
       </el-col>
     </el-row>
 
@@ -29,26 +30,22 @@
       <el-col :span="4">
         <el-aside style="width:100%;background-color: rgb(255, 255, 255);height: 1000px;border-right: 1px solid beige">
           <el-menu default-active="" class="el-menu-vertical-demo" @select="handleSelect">
-            <!-- <el-menu-item index="0">
-               <i class="el-icon-mobile-phone"></i>
-               <span slot="title"><router-link to='/CustomerOrder/Foods'>首页</router-link></span>
-             </el-menu-item>-->
             <el-submenu index="1">
               <template slot="title"><i class="el-icon-message"></i><span slot="title">排队管理</span></template>
-              <el-menu-item index="1-2" @click="onloadOne('1-1')">序号列表</el-menu-item>
+              <el-menu-item index="1-1" @click="onloadOne('1-1')">序号列表</el-menu-item>
             </el-submenu>
             <el-submenu index="2">
               <template slot="title"><i class="el-icon-menu"></i><span slot="title">餐桌状态</span></template>
               <el-menu-item index="2-1"  @click="onloadOne('2-1')">餐桌视图</el-menu-item>
             </el-submenu>
-            <el-submenu index="3">
+            <!--<el-submenu index="3">
               <template slot="title"><i class="el-icon-goods"></i><span slot="title">菜品点餐</span></template>
               <el-menu-item index="3-1"  @click="onloadOne('3-1')">点餐视图</el-menu-item>
             </el-submenu>
             <el-submenu index="4">
               <template slot="title"><i class="el-icon-goods"></i><span slot="title">订单记录</span></template>
               <el-menu-item index="4-1"  @click="onloadOne('4-1')">查看订单</el-menu-item>
-            </el-submenu>
+            </el-submenu>-->
 
           </el-menu>
         </el-aside>

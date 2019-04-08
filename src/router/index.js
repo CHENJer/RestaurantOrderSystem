@@ -5,6 +5,7 @@ import receptionPage from '@/components/backEnd/manage/receptionPage.vue'
 import kitchenPage from '@/components/backEnd/manage/kitchenPage.vue'
 import adminPage from '@/components/backEnd/manage/adminPage.vue'
 import test from '@/components/test.vue'
+import test1 from '@/components/test1.vue'
 import noticePush from '@/components/backEnd/notice/noticePush'
 import noticeList from '@/components/backEnd/notice/noticeList'
 import foodType from '@/components/backEnd/menuManage/foodType'
@@ -22,6 +23,9 @@ import permissionAssignment from '@/components/backEnd/systemManage/permissionAs
 import userManage from '@/components/backEnd/systemManage/userManage'
 import sellPage from '@/components/frontEnd/sellPage/sellPage'
 import createOrder from '@/components/frontEnd/createOrder/createOrder'
+import aboutOrder from '@/components/frontEnd/aboutOrder/aboutOrder'
+import orderList from '@/components/frontEnd/orderList/orderList'
+import alipayStatus from '@/components/frontEnd/alipayStatus/alipayStatus'
 
 import sortPage from '@/components/backEnd/sortManage/sortPage'
 import tableView from '@/components/backEnd/tableView/tableView'
@@ -42,32 +46,42 @@ export default new Router({
       name: 'test',
       component:test
     },
-
+    {
+      /*测试页面*/
+      path:'/test1',
+      name: 'test1',
+      component:test1
+    },
     {
       /*顾客点餐界面*/
       path:'/CustomerOrder/sellPage',
       name: 'sellPage',
       component:sellPage
     },
-   /* {
-      /!*点餐菜单界面*!/
-      path:'/CustomerOrder/Foods',
-      name: 'Foods',
-      component:Foods
-    },
     {
-      /!*商家公告界面*!/
-      path:'/CustomerOrder/Store',
-      name: 'Store',
-      component:Store
-    },*/
-    {
-      /*顾客订单界面*/
+      /*顾客下单界面*/
       path:'/CustomerOrder/createOrder',
       name: 'createOrder',
       component:createOrder
     },
-
+    {
+      /*顾客订单详情界面*/
+      path:'/CustomerOrder/aboutOrder/:omId',
+      name: 'aboutOrder',
+      component:aboutOrder
+    },
+    {
+      /*顾客历史订单界面*/
+      path:'/CustomerOrder/orderList',
+      name: 'orderList',
+      component:orderList
+    },
+    {
+      /*付款状态界面*/
+      path:'/CustomerOrder/alipayStatus/:omId',
+      name: 'alipayStatus',
+      component:alipayStatus
+    },
     {
       /*后台登录界面*/
       path:'/ManageRegister',
@@ -228,7 +242,7 @@ export default new Router({
     /*默认跳转后台管理页面*/
     {
       path:'*',
-      redirect:'/CustomerOrder/sellPage'
+      redirect:'/ManageRegister'
     },
   ],
   mode:"history"

@@ -24,7 +24,7 @@ function randomNum(randomFlag, min, max){
 function randomNum(longNum){
   for(var j=0;j<10;j++){
     var randStr = "";
-    for (var i = 0; i < longNum-8; i++) {//此处的10为生成10位数字，可随即更改
+    for (var i = 0; i < longNum-8; i++) {//此处生成longNum-8位数字，可随即更改
       var randItem = Math.floor(Math.random() * 10);
       randStr += randItem;
     }
@@ -36,12 +36,31 @@ function randomNum(longNum){
     day	      = day<10?"0"+day:day;             //和月份显示一样
     var date  = year+month+day;
 
-    var value=date+randStr;//此处的766是要求必须已766开头，如果不需要可以去掉并在for循环中填入你要的位数
+    var value=date+randStr;//
 
     return value
   }
 }
+function getOnlyNum(En) {
+  var en = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+  var num = ['0','1','2','3','4','5','6','7','8','9'];
+  var enres = "";
+  var numres = ""
+  for(var i = 0; i < 1 ; i ++) {
+    var enrandom = Math.ceil(Math.random()*25);
+    enres += en[enrandom];
+  }
+  for(var i = 0; i < 15 ; i ++) {
+    var numrandom = Math.ceil(Math.random()*9);
+    numres += num[numrandom];
+  }
+  return En+numres;
 
+
+
+
+}
 export {
-  randomNum
+  randomNum,
+  getOnlyNum
 }

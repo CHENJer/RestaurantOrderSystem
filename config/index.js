@@ -10,7 +10,20 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/video':{
+        target:'https://*.aliyun.com',
+        changeOrigin:true,
+
+      },
+      '/api':{
+        target:'http://47.107.115.216:8002/',
+        changeOrigin:true,
+        pathRewrite:{
+          '/api':''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: '192.168.43.139', // can be overwritten by process.env.HOST

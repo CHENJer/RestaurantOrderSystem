@@ -4,58 +4,62 @@
       <el-input v-model="search" suffix-icon="el-icon-search" placeholder="输入订单ID搜索"/>
     </div>
 
-    <el-table  :data="tableData5.filter(data => !search || data.id.toLowerCase().includes(search.toLowerCase()))" style="width: 100%" :default-sort = "{prop: 'date', order: 'descending'}">
+    <el-table  :data="TableData.filter(data => !search || data.omId.toLowerCase().includes(search.toLowerCase())
+        || data.tNum.toLowerCase().includes(search.toLowerCase()) || data.sSeatnum.toLowerCase().includes(search.toLowerCase())  )"
+                 height="500px"
+                 style="width: 100%" :default-sort = "{prop: 'date', order: 'descending'}">
       <el-table-column type="expand" >
-        <template slot-scope="props">
-          <el-form label-position="center" inline class="demo-table-expand">
-            <el-table :data="tableData5" height="300" show-summary stripe style="width: 100%;border: 3px solid silver;border-radius: 5px"  :default-sort = "{prop: 'date', order: 'descending'}">
-              <el-table-column prop="name" label="菜品名字" >
-              </el-table-column>
-              <el-table-column prop="shopId" label="数量" >
-              </el-table-column>
-              <el-table-column prop="shopId" label="单价"  sortable>
-              </el-table-column>
-              <el-table-column prop="shopId" label="小计"  sortable>
-              </el-table-column>
-            </el-table>
-          </el-form>
+        <template slot-scope="scope" >
+          <!-- v-if="scope.row.omId==items.omId =="-->
+          <div style="font-size: 18px"  v-for="(items,index) in OrderDetail" v-if="scope.row.omId==items.omId">
+            <div></div>
+            <span style="">{{items.fName}}</span>
+            <span style="position: absolute;left: 45%">×{{items.fQuantity}}</span>
+            <span style="position: absolute;left: 65%;color:red">￥{{items.fPrice}}</span>
+          </div>
         </template>
+
       </el-table-column>
-      <el-table-column label="订单ID" prop="id">
+
+      <el-table-column label="订单ID" prop="omId" width="165">
       </el-table-column>
-      <el-table-column label="下单时间" prop="name" sortable>
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{new Date() | shortTime}}</span>
-        </template>
+      <el-table-column label="桌号" prop="tNum" width="50">
       </el-table-column>
-      <el-table-column label="座位编号" prop="shopId">
+      <el-table-column label="座位" prop="sSeatnum" width="50">
       </el-table-column>
-      <el-table-column label="订单总额" prop="shopId" sortable>
+      <el-table-column label="订单总额" prop="omAmount" width="100" sortable>
       </el-table-column>
-      <el-table-column label="支付状态" prop="payStatus" :filters="[{text: '已支付', value: '已支付'},{text: '未支付', value: '未支付'}]"
-                       :filter-method="filterHandler" column-key="payStatus">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.payStatus === '未支付' ? 'primary' : 'success'" disable-transitions>
-            {{scope.row.payStatus}}
+      <el-table-column label="下单时间" prop="omCreatetime" width="150" sortable>
+      </el-table-column>
+      <el-table-column label="退单时间" prop="omUpdatetime" width="150" sortable>
+      </el-table-column>
+      <!--<el-table-column label="订单状态" width="90">
+        <template slot-scope="scope" >
+          <el-tag type="success" v-if="scope.row.omStatus == 0">
+            进行中
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="下单员工" prop="name">
-      </el-table-column>
+      <el-table-column label="支付状态" >
+        <template slot-scope="scope" >
+          <el-tag type="success" v-if="scope.row.omPayStatus == 1">
+            已支付
+          </el-tag>
+          <el-tag type="danger" v-else>
+            未支付
+          </el-tag>
+        </template>
+      </el-table-column>-->
       <el-table-column label="退单审批">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">同意</el-button>
-          <el-button
-            size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">撤回</el-button>
+            @click="handleEdit(scope.$index, scope.row)">审核</el-button>
+
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
@@ -65,43 +69,9 @@
       data(){
         return{
           search: '',
-          tableData5: [{
-            id: '12987122',
-            name: '好滋好味鸡蛋仔',
-            category: '江浙小吃、小吃零食',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            address: '上海市普陀区真北路',
-            shop: '王小虎夫妻店',
-            shopId: '10333',
-            payStatus:'已支付'
-          }, {
-            id: '12987123',
-            name: '好滋好味鸡蛋仔',
-            category: '江浙小吃、小吃零食',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            address: '上海市普陀区真北路',
-            shop: '王小虎夫妻店',
-            shopId: '10323',
-            payStatus:'未支付'
-          }, {
-            id: '12987125',
-            name: '好滋好味鸡蛋仔',
-            category: '江浙小吃、小吃零食',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            address: '上海市普陀区真北路',
-            shop: '王小虎夫妻店',
-            shopId: '10334',
-            payStatus:'已支付'
-          }, {
-            id: '12987126',
-            name: '好滋好味鸡蛋仔',
-            category: '江浙小吃、小吃零食',
-            desc: '荷兰优质淡奶，奶香浓而不腻',
-            address: '上海市普陀区真北路',
-            shop: '王小虎夫妻店',
-            shopId: '10333',
-            payStatus:'未支付'
-          }]
+          OrderMaster:[],
+          OrderDetail:[],
+          TableData: [],
 
         }
       },
@@ -112,24 +82,111 @@
           return row[property] === value;
         },
         handleEdit(index, row) {
-          this.$confirm('此操作将同意顾客退单, 是否继续?', '提示', {confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
+          console.log(row)
+          /*确定是否退单对话框*/
+          this.$confirm('是否同意顾客退单?', '提示', {confirmButtonText: '同意', cancelButtonText: '不同意', type: 'warning'
           }).then(() => {
-            this.$message({showClose: true, message: '退单成功', type: 'success'});
+            /*调用退款方法*/
+              this.refundOrder(row.omId ,row.omAmount)
           }).catch(() => {
-            this.$message({type: 'info', message: '已取消退单'});
+            /*不同意退单，更改订单状态*/
+            let Order ={"omId":row.omId,"omStatus":0}
+            this.updateOrderMaster(Order)
+            setTimeout(()=>{
+              this.getOrderMaster()
+              this.getOrderDetail()
+              this.$notify.success('不同意顾客退单');
+            },1000)
           });
-          console.log(index, row);
         },
-        handleDelete(index, row) {
-          this.$confirm('此操作将撤销顾客的退单申请, 是否继续?', '提示', {confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
-          }).then(() => {
-            this.$message({type: 'success', message: '撤销成功!'});
-          }).catch(() => {
-            this.$message({type: 'info', message: '已取消撤销'});
-          });
-          console.log(index, row);
-        }
-      }
+        refundOrder(sn ,money){
+          /*退款提示*/
+          this.$notify.info("退款中，请稍候....")
+          /*退款api，sn为订单编号，money为金额金额*/
+          this.$axios.get('http://47.107.115.216:8002/Refund.php?sn='+sn+'&money='+money).then((res)=> {
+            /*返回状态码 10000为退款成功*/
+            if(res.status = 10000){
+              let Order ={"omId":sn,"omStatus":3}
+              /*更新主订单*/
+              this.updateOrderMaster(Order)
+              /*延迟获取主订单和订单详情*/
+              setTimeout(()=>{
+                this.getOrderMaster()
+                this.getOrderDetail()
+                this.$notify.success("退款成功")
+              },2000)
+            }
+          }).catch(function (error) {
+              console.log(error);
+            });
+        },
+        getOrderMaster(){
+          this.TableData =[]
+          let that =this
+          this.$axios({
+            method:"post",
+            url:this.COMMON.backUrl+"orderSystem/Order/queryOrderMasterInfo",
+            headers:{
+              'Content-type': 'application/json'
+            }
+            /*data: JSON.stringify(OrderMaster)*/
+          }).then((res)=>{
+            //console.log(res.data.data[0].pType);
+            that.OrderMaster = res.data.data
+            for(let i =0; i<that.OrderMaster.length;i++){
+              if(that.OrderMaster[i].omStatus == 2 ){
+                that.TableData.push(that.OrderMaster[i])
+              }
+            }
+
+
+            //console.log(that.OrderMaster)
+          }).catch(function (error)
+          {
+            console.log(error)
+          })
+        },
+        getOrderDetail(){
+          let that =this
+          this.$axios({
+            method:"post",
+            url:this.COMMON.backUrl+"orderSystem/Order/queryOrderDetailInfo",
+            headers:{
+              'Content-type': 'application/json'
+            },
+            /*data: JSON.stringify(OrderDetail)*/
+          }).then((res)=>{
+            //console.log(res.data.data[0].pType);
+
+            that.OrderDetail = res.data.data
+            //console.log(that.OrderDetail)
+          }).catch(function (error)
+          {
+            console.log(error)
+          })
+        },
+        updateOrderMaster(Order){
+          let that =this
+          this.$axios({
+            method:"post",
+            url:this.COMMON.backUrl+"orderSystem/Order/updateOrder",
+            headers:{
+              'Content-type': 'application/json'
+            },
+            data: JSON.stringify(Order)
+          }).then((res)=>{
+            //console.log(res.data.data[0].pType);
+
+          }).catch(function (error)
+          {
+            console.log(error)
+          })
+        },
+      },
+      mounted() {
+        this.getOrderMaster()
+        this.getOrderDetail()
+      },
     }
 </script>
 

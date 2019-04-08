@@ -1,27 +1,30 @@
 <template>
   <div class="kitchenPage">
-    <audio ref="newOrder"  src="../../../../static/mp3/orderMusic.mp3">
-    </audio>
+    <audio ref="newOrder"  src="../../../../static/mp3/orderMusic.mp3"></audio>
+    <audio ref="getOrder"  src="../../../../static/mp3/getOrder.mp3"></audio>
     <el-row class="header">
       <el-col :span="4"><div :class="{OSName: isOSName}" style="overflow: hidden">餐厅点餐系统</div></el-col>
-      <el-col :span="16">
+      <el-col :span="14">
         <div :class="{NavButton: isButton}" style="font-size: 21px;font-weight: bold">
           厨房管理界面
         </div>
       </el-col>
-      <el-col :span="4">
-        <div :class="{UserInfo: isInfo}">
-          <el-dropdown trigger="click">
-            <span class="el-dropdown-link" style="color:white">
-             <i class="el-icon-setting"></i>
-              <span class="user">欢迎admin登陆</span>
-            </span>
+      <el-col :span="6">
+       <!-- <div :class="{UserInfo: isInfo}">-->
+          <div style="height:5px;"></div>
+          <el-dropdown trigger="click" style="position: absolute;right: 20%;top:15%">
+            <mu-avatar >
+              <!--<mu-icon value="assignment_ind"></mu-icon>-->
+              <img src="../../../assets/1.jpg">
+            </mu-avatar>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
               <el-dropdown-item @click.native="outToLogin()">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
+          <span style="font-size: 18px;font-weight: bolder;color: white;position: absolute;right: 3%;top:1%">
+                  欢迎您，{{userName}}
+          </span>
+
       </el-col>
     </el-row>
 
@@ -29,7 +32,7 @@
     <el-row class="main">
       <!--导航栏-->
       <el-col :span="4">
-        <el-aside style="width:100%;background-color: rgb(255, 255, 255);height: 1000px;border-right: 1px solid beige">
+        <el-aside style="width:100%;background-color: rgb(255, 255, 255);height: 500px;border-right: 1px solid beige">
           <el-menu default-active="" class="el-menu-vertical-demo" @select="handleSelect">
             <!-- <el-menu-item index="0">
                <i class="el-icon-mobile-phone"></i>
@@ -58,14 +61,13 @@
 
           </el-col>
           <!--右侧主题内容-->
-          <el-col :span="24" class="content-wrapper">
+          <el-col :span="24" class="content-wrapper" style="overflow: auto">
             <transition name="fade" mode="out-in">
               <router-view></router-view>
             </transition>
           </el-col>
         </div>
       </el-col>
-
     </el-row>
 
   </div>
@@ -78,10 +80,11 @@
     name: "adminPage",
     data() {
       return {
-        newOrderMsg:'a', //下单消息
+        newOrderMsg:'', //下单消息
         isOSName: true ,  //顶部餐厅名字
         isButton: true ,  //顶部按钮
         isInfo: true ,    //顶部用户信息
+        userName:'',      //用户名
         mainTitle: "",
         mainTitleInfo: '', //主体内容标题
         menuObject:{
@@ -102,10 +105,30 @@
       }
     },
     methods:{
-      newOrderAudio(){
-        let audio = this.$refs.newOrder
-        audio.play()
-        this.$notify.info({title: '消息', message: '有新的外卖订单'});
+      newOrderAudio(num,title){
+        if(num==0){
+          let audio = this.$refs.newOrder
+          audio.play()
+          this.$notify.info({title: '消息', message: title});
+        }else if(num==1){
+          let audio = this.$refs.getOrder
+          audio.play()
+          this.$notify.warning({title: '消息', message: title});
+        }
+      },
+      getCookie: function (cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        //console.log("获取cookie,现在循环")
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          //console.log(c)
+          while (c.charAt(0) == ' ') c = c.substring(1);
+          if (c.indexOf(name) != -1){
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
       },
       outToLogin:function () {
         //1、删除登陆cookie信息
@@ -142,8 +165,15 @@
           channel: 'newsOrder',
           onMessage: function(message){
             //console.log(that);
-            that.newOrderMsg = message.content
-            that.newOrderAudio();
+            if(message.content=="有顾客下单了"){
+              that.newOrderMsg = message.content
+              that.newOrderAudio(0,message.content);
+
+            }else if(message.content=="有顾客催单了"){
+              that.newOrderMsg = message.content
+              that.newOrderAudio(1,message.content);
+            }
+
           }
         });
 
@@ -151,6 +181,7 @@
     },
     mounted() {
       this.newOrderMsg=this.$store.state.newOrderMsg
+      this.userName = this.getCookie("kitchenloginName");
     },
     components:{
 
@@ -195,7 +226,7 @@
   }
   /*右侧主体内容*/
   .content-wrapper {
-    background-color: #fff;
+  /* // background-color: #fff;*/
     box-sizing: border-box;
   }
 </style>

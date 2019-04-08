@@ -16,6 +16,9 @@ import moment from 'moment'
 import global from './common/util/commonInfo.vue'
 import time from './filter/time.js'
 import store from './store' //引入store
+import Print from 'vue-print-nb'
+import $ from 'jquery'
+Vue.use(Print); //打印
 Vue.prototype.COMMON = global  // 公共的地址
 
 Vue.use(ElementUI);
@@ -23,16 +26,16 @@ Vue.use(MuseUI);
 
 /*跨域请求头格式*/
 axios.defaults.headers = {
-  "Content-Type": "application/x-www-form-urlencoded;charset=utf-8"
+  'Content-type': 'application/json'
 }
-/*提交前可以被修改*/
+/*/!*提交前可以被修改*!/
 axios.defaults.transformRequest = [function (data) {
   var newData = "";
   for (var k in data) {
     newData += encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) + '&'
   }
   return newData
-}]
+}]*/
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts

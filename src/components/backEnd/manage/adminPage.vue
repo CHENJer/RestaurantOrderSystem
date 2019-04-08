@@ -2,24 +2,25 @@
   <div class="adminPage">
     <el-row class="header">
       <el-col :span="4"><div :class="{OSName: isOSName}">餐厅点餐系统</div></el-col>
-      <el-col :span="16">
+      <el-col :span="14">
         <div :class="{NavButton: isButton}" style="font-size: 21px;font-weight: bold;">
           后台管理界面
         </div>
       </el-col>
-      <el-col :span="4">
-        <div :class="{UserInfo: isInfo}">
-          <el-dropdown trigger="click">
-            <span class="el-dropdown-link" style="color:white">
-             <i class="el-icon-setting"></i>
-              <span class="user">admin</span>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item @click.native="outToLogin()">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
+      <el-col :span="6">
+        <el-dropdown trigger="click" style="position: absolute;right: 20%;top:15%">
+          <mu-avatar >
+            <!--<mu-icon value="assignment_ind"></mu-icon>-->
+            <img src="../../../assets/1.jpg">
+          </mu-avatar>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="outToLogin()">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <span style="font-size: 18px;font-weight: bolder;color: white;position: absolute;right: 3%;top:1%">
+                  欢迎您，{{userName}}
+        </span>
+
       </el-col>
     </el-row>
 
@@ -103,6 +104,7 @@
           isOSName: true ,  //顶部餐厅名字
           isButton: true ,  //顶部按钮
           isInfo: true ,    //顶部用户信息
+          userName:'',
           mainTitle: "",
           mainTitleInfo: '', //主体内容标题
           menuObject:{
@@ -177,6 +179,20 @@
             this.mainTitleInfo = this.menuObject[cmenuName].menuItems[cmenuItem].menuItem
           }
         },
+        getCookie: function (cname) {
+          var name = cname + "=";
+          var ca = document.cookie.split(';');
+          //console.log("获取cookie,现在循环")
+          for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            //console.log(c)
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1){
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        },
         handleSelect(key, keyPath) {
           switch (key) {
             case '1-1':
@@ -242,7 +258,10 @@
           }
         }
       },
-      components:{
+      created(){
+        this.userName = this.getCookie("adminloginName");
+      },
+      mounted(){
 
       }
     }

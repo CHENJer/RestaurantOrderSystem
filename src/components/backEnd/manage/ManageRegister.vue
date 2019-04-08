@@ -3,7 +3,6 @@
   <div class = "note" :style = "note">
     <!--login框，表单+tab标签页的组合-->
     <div class = "loginFrame">
-
       <!--表单组件放在外面，标签栏在里面-->
        <!--rules属性传入验证规则-->
       <el-form ref = "AccountForm" status-icon :model = "AccountForm"  :rules = "rules"  class = "demo-ruleForm login-container">
@@ -11,29 +10,29 @@
         <!--tab标签-->
         <div class = "tabsUser">
           <el-tabs v-model = "activeName" @tab-click = "handleClick" class = "users" style = "height: 30px;font-size: 25px">
-            <el-tab-pane label = "前台" name = "reception" class = "tab1"></el-tab-pane>
-            <el-tab-pane label = "厨房" name = "kitchen" class = "tab2"></el-tab-pane>
-            <el-tab-pane label = "管理员" name = "admin" class = "tab3"></el-tab-pane>
+            <el-tab-pane label = "前台" name = "前台员工" class = "tab1"></el-tab-pane>
+            <el-tab-pane label = "厨房" name = "厨房员工" class = "tab2"></el-tab-pane>
+            <el-tab-pane label = "管理员" name = "管理员" class = "tab3"></el-tab-pane>
           </el-tabs>
         </div>
 
         <!--账号密码输入框-->
         <div class = "formGroup">
           <!--prop属性设置需要校验的字段名，表单验证时，就会验证el-input元素绑定的变量AccountForm.username的值是否符合验证规则-->
-          <el-form-item  label = "账号" prop = "username" >
+          <el-form-item  label = "账号" prop = "aUsername" >
             <el-input type = "text"  auto-complete = "off" placeholder = "请输入您的账号"
-                      class = "form-control" v-model="AccountForm.username"></el-input>
+                      class = "form-control" v-model="AccountForm.aUsername"></el-input>
           </el-form-item>
-          <el-form-item label = "密码" prop = "password" class = "form-inline">
+          <el-form-item label = "密码" prop = "aPassword" class = "form-inline">
             <el-input type = "password" auto-complete = "off" placeholder = "请输入密码"
-                      class = "form-control" v-model="AccountForm.password"></el-input>
+                      class = "form-control" v-model="AccountForm.aPassword"></el-input>
           </el-form-item>
         </div>
 
         <!--记住密码-->
         <div class = "remFor">
           <el-checkbox v-model = "checked" checked class = "remember">记住密码</el-checkbox>
-          <a href ="'https://blog.csdn.net/Vanadis_outlook/article/details/72823024.html'" class = "forget">忘记密码？</a>
+          <!--<a href ="'https://blog.csdn.net/Vanadis_outlook/article/details/72823024.html'" class = "forget">忘记密码？</a>-->
         </div>
 
         <!--登陆按钮-->
@@ -74,23 +73,23 @@
           if (value === '') {
             callback(new Error('密码不能为空'));
           } else {
-            if (this.AccountForm.password !== '') {
+            if (this.AccountForm.aPassword !== '') {
              //this.$refs.AccountForm.validateField('password');
             }
-
             callback();
-
 
           }
         };
         return {
             /*标签页默认值：前台reception*/
-            activeName:'reception',
+            activeName:'前台员工',
+            activeNameEN:'reception',
             /*表单字段双向绑定*/
             AccountForm:{
-              username:'',
-              password:''
+              aUsername:"",
+              aPassword:""
             },
+            loginName:"",
             /*背景图样式*/
             note: {
               position:"absolute",
@@ -103,11 +102,11 @@
               backgroundRepeat: "no-repeat"
           },
           rules: {
-            username :[
+            aUsername :[
               //{required: true, message: '账号不能为空',trigger: 'blur'},
               { validator: validateUsername,trigger: 'blur' }
             ],
-            password: [
+            aPassword: [
              // {required: true,message: '密码不能为空', trigger: 'blur'},
               { validator: validatePassword,trigger: 'blur' }
             ]
@@ -116,39 +115,146 @@
         };
       },
       methods:{
+        /*@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")*/
         login(){
-          this.$refs.ruleForm.validate((valid) => {
-
+          this.getCookies();
+          var vueGet = this;
+          this.$axios({
+            method:"post",
+            url:this.COMMON.backUrl+"orderSystem/UserInfo/queryUserInfo",
+            headers:{
+              'Content-type': 'application/json'
+            },
+            data: JSON.stringify(this.AccountForm)
+          }).then((res)=>{
+            // console.log(res.data.data.length);
+           // console.log(res.data.data[0].aStatus);
+            if(res.data.data.length>0){
+              if(vueGet.activeName==res.data.data[0].pType && res.data.data[0].aStatus != 1){
+                this.loginName = res.data.data[0].uName
+                if(this.checked){
+                  this.setCookie (this.activeNameEN+"loginName", this.loginName, 1) ;
+                  this.setCookie (this.activeNameEN, this.activeName, 1) ;
+                  this.setCookie (this.activeNameEN+"uId", res.data.data[0].uId, 1) ;
+                  this.setCookie (this.activeNameEN+"aUsername", this.AccountForm.aUsername, 1) ;
+                  this.setCookie (this.activeNameEN+"aPassword", this.AccountForm.aPassword, 1) ;
+                }else{
+                  this.setCookie(this.activeNameEN+"loginName", "", -1);
+                  this.setCookie (this.activeNameEN, this.activeName, -1) ;
+                  this.setCookie (this.activeNameEN+"uId", res.data.data[0].uId, -1) ;
+                  this.setCookie (this.activeNameEN+"aUsername", this.AccountForm.aUsername, -1) ;
+                  this.setCookie (this.activeNameEN+"aPassword", this.AccountForm.aPassword, -1) ;
+                  this.AccountForm.aUsername ="";
+                  this.AccountForm.aPassword = "";
+                }
+                this.$router.push('/'+this.activeNameEN+'Page');
+              }else{
+               this.$notify.info("登录失败")
+              }
+            }else{
+              this.$notify.info("账号密码错误")
+            }
+          }).catch(function (error)
+          {
+            console.log(error)
           })
-          //this.$router.push('/aaa')
+
         },
         /*打印选择的标签页选项*/
         handleClick(tab, event) {
-          console.log("tab:"+this.activeName, event);
+          switch (this.activeName) {
+            case "前台员工":
+              this.activeNameEN = "reception"
+              break;
+            case "厨房员工":
+              this.activeNameEN = "kitchen"
+              break;
+            case "管理员":
+              this.activeNameEN = "admin"
+              break;
+          }
+          // console.log("tab:"+this.activeNameEN, event);
+         // console.log(this.getCookie (this.activeNameEN));
+         // console.log(this.checked);
+          if(this.activeName == this.getCookie (this.activeNameEN)){
+            this.AccountForm.aUsername =this.getCookie (this.activeNameEN+"aUsername") ;
+            this.AccountForm.aPassword = this.getCookie (this.activeNameEN+"aPassword") ;
+          }else{
+            this.AccountForm.aUsername ="";
+            this.AccountForm.aPassword = "";
+          }
+
         },
         /*登陆按钮提交事件*/
         submitForm(AccountForm) {
           this.$refs[AccountForm].validate((valid) => {
             if (valid) {
-              //alert('submit!');
-              this.$router.push("/"+this.activeName+"Page")
+              this.login()
             } else {
               console.log('error submit!!');
               return false;
             }
           });
+        },
+        //设置cookie
+        setCookie (cname, cvalue, exdays) {
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+          var expires = "expires=" + d.toUTCString();
+          document.cookie = cname + "=" + cvalue + "; " + expires;
+          //console.info(document.cookie);
+        },
+        //获取cookie
+        getCookies: function (){
+          let loginName = this.getCookie("loginName");
+          let loginType = this.getCookie("loginType");
+          let aUsername = this.getCookie("aUsername");
+          let aPassword = this.getCookie("aPassword");
+          //console.log(loginName+loginType+aUsername+aPassword)
+        },
+        getCookie: function (cname) {
+          var name = cname + "=";
+          var ca = document.cookie.split(';');
+          //console.log("获取cookie,现在循环")
+          for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            //console.log(c)
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1){
+              return c.substring(name.length, c.length);
+            }
+          }
+          return "";
+        },
+        //清除cookie
+       /* clearCookie: function () {
+          this.setCookie("username", "", -1);
+        },*/
+        checkCookie: function () {
+          var user = this.getCookie("username");
+          if (user != "") {
+            alert("Welcome again " + user);
+          } else {
+            user = prompt("Please enter your name:", "");
+            if (user != "" && user != null) {
+              this.setCookie("username", user, 365);
+            }
+          }
         }
+      },
+      mounted(){
+        this.getCookie()
       }
     }
 </script>
 <!--全局属性-->
 <style>
-  .el-form-item__label{
+  .note .el-form-item__label{
     font-size: 22px;
     text-align:right;
     margin-left: 10px;
   }
-  .el-tabs__item {
+  .note .el-tabs__item {
     font-size: 20px;
   }
 </style>

@@ -7,63 +7,61 @@
             <mu-col>
               <mu-paper :z-depth="0">
                 <mu-list>
-                  <mu-list-item>
+                  <!--<mu-list-item>
                     <mu-list-item-content>
                       <mu-list-item-title >
                         订单编号：
-                        <span style="margin-left: 0.5rem;font-size: larger;">1234567899874563</span>
+                        <span style="margin-left: 0.5rem;font-size: larger;">{{OrderMaster.omId}}</span>
                       </mu-list-item-title>
                     </mu-list-item-content>
-                  </mu-list-item>
-                  <mu-list-item>
+                  </mu-list-item>-->
+                 <!-- <mu-list-item>
                     <mu-list-item-content>
                       <mu-list-item-title >
                         当前桌号：
-                        <span style="margin-left: 0.5rem;font-size: larger;color: red">3a21</span>
+                        <span style="margin-left: 0.5rem;font-size: larger;color: red">{{}}</span>
                       </mu-list-item-title>
                     </mu-list-item-content>
-                  </mu-list-item>
-                  <mu-divider shallow-inset></mu-divider>
+                  </mu-list-item>-->
+               <!--   <mu-divider shallow-inset></mu-divider>-->
                   <mu-list-item>
                     <mu-list-item-content>
                       <mu-list-item-title>订单备注：</mu-list-item-title>
                     </mu-list-item-content>
                   </mu-list-item>
-                  <div style="width: 80%;position: relative;left: 10%">
-                    <div style="height:100px; font-size: 18px;overflow: scroll;word-wrap: break-word; word-break: normal;">
-                        {{orderDes}}
-                    </div>
+                  <div :style="{'width': clientWidth}" style="position: relative;left: 10%;font-size: 18px;" class="div_textarea">
+                      <mu-text-field multi-line :rows="3" :rows-max="6"  cols="12" v-model="OrderMaster.omDesc" style="font-size: 18px;"
+                                     placeholder="如有特殊要求，请在这里写下来">
+                      </mu-text-field>
                   </div>
-                  <mu-divider shallow-inset></mu-divider>
                   <mu-list-item>
                     <mu-list-item-content>
-                      <mu-list-item-title style="position: absolute;left: 0%;top:10%;margin-left: 20px">支付方式</mu-list-item-title>
+                      <mu-list-item-title style="position: absolute;left: 0%;top:0%;margin-left: 20px">支付方式</mu-list-item-title>
                     </mu-list-item-content>
                   </mu-list-item>
                   <mu-list-item>
                     <mu-list-item-content>
-                      <img src="../../../assets/alipay.jpg" width="20px" style="position: absolute;left: 0%;top: -10%;margin-left: 20px">
+                      <img src="../../../assets/alipay.jpg" width="20px" style="position: absolute;left: 0%;top: 0%;margin-left: 20px">
                       <span style="position: absolute;left: 0%;top: -10%;font-size: 16px;margin-left: 50px">支付宝支付</span>
                       <mu-radio :value="'alipay'" v-model="radio.value"  style="position: absolute;right: 5%;top: -10%;"></mu-radio>
                     </mu-list-item-content>
-                    <mu-list-item-content>
+                    <!--<mu-list-item-content>
                       <img src="../../../assets/UnionPay.png" width="20px" style="position: absolute;left: 0%;top: 60%;margin-left: 20px">
                       <span style="position: absolute;left: 0%;top: 60%;font-size: 16px;margin-left: 50px">模拟支付</span>
                       <mu-radio :value="'demopay'" v-model="radio.value" style="position: absolute;right: 5%;top: 60%;"></mu-radio>
-                    </mu-list-item-content>
+                    </mu-list-item-content>-->
                   </mu-list-item>
-                  <div style="margin-top: 15px"></div>
+                  <div style="margin-top: 0px"></div>
                 </mu-list>
                 <mu-expansion-panel :expand="panel === 'panel1'" @change="toggle('panel1')" :z-depth="0">
                   <div slot="header">已点菜品：</div>
                   <mu-list style="overflow: auto;">
-                    <mu-list-item  v-for="index in 5" :key="index">
+                    <mu-list-item  v-for="(items,index) in shopchat" :key="index">
                       <mu-list-item-content>
                         <mu-list-item-title>
-                          <span>菜品名字</span>
-                          <span style="margin-left: 20%">× 2</span>
-                          <span style="margin-left: 20%">￥ 12</span>
-
+                          <span>{{items.fName}}</span>
+                          <span style="position: absolute;left: 65%;top: 20%">× {{items.fQuantity}}</span>
+                          <span style="position: absolute;left: 85%;top: 20%">￥ {{items.fPrice}}</span>
                         </mu-list-item-title>
                       </mu-list-item-content>
                     </mu-list-item>
@@ -82,7 +80,8 @@
           <mu-button icon slot="left" @click="backFood()">
             <mu-icon value="keyboard_backspace"></mu-icon>
           </mu-button>
-            <span >￥12</span>
+            <span v-if="OrderMaster.omAmount>0">￥</span>
+            <span>{{OrderMaster.omAmount}}</span>
             <mu-button @click="pay()" color="success" slot="right" v-bind:style="{'height': payHeight+'px'}" style="width: 30%;position: absolute;bottom: 0%;right: 0%">去支付</mu-button>
         </mu-appbar>
       </div>
@@ -91,6 +90,7 @@
 </template>
 
 <script>
+  import {randomNum}  from '../../../common/util/getRandom.js'
     export default {
       name: "createOrder",
       data(){
@@ -99,7 +99,7 @@
           payHeight:'',
           clientWidth:'',
           clientHeight:'',
-          orderDes:'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', //订单备注
+          orderDes:'', //订单备注
           radio: {     //Selects: {{radio.value1}}  radio1 or  radio2
             value: 'alipay',
           },
@@ -108,94 +108,33 @@
             name: '',
             order: 'asc'
           },
-          columns: [
-            { title: '', name: 'name' ,width: 100,height: 0},
-            { title: '', name: 'calories', width: 100,height: 0 ,align: 'center'},
-            { title: '', name: 'fat', width: 80, height: 0 ,align: 'center'},
-            { title: '', name: 'carbs', width: 80, height: 0 ,align: 'center'},
-          ],
-          list: [
-            {
-              name: '酸菜鱼鲈鱼',
-              calories: 159,
-              fat: 6.0,
-              carbs: 24,
-              protein: 4.0,
-              iron: 1
-            },
-            {
-              name: 'Ice cream sandwich',
-              calories: 237,
-              fat: 9.0,
-              carbs: 37,
-              protein: 4.3,
-              iron: 1
-            },
-            {
-              name: 'Eclair',
-              calories: 262,
-              fat: 16.0,
-              carbs: 23,
-              protein: 6.0,
-              iron: 7
-            },
-            {
-              name: 'Cupcake',
-              calories: 305,
-              fat: 3.7,
-              carbs: 67,
-              protein: 4.3,
-              iron: 8
-            },
-            {
-              name: 'Gingerbread',
-              calories: 356,
-              fat: 16.0,
-              carbs: 49,
-              protein: 3.9,
-              iron: 16
-            },
-            {
-              name: 'Jelly bean',
-              calories: 375,
-              fat: 0.0,
-              carbs: 94,
-              protein: 0.0,
-              iron: 0
-            },
-            {
-              name: 'Lollipop',
-              calories: 392,
-              fat: 0.2,
-              carbs: 98,
-              protein: 0,
-              iron: 2
-            },
-            {
-              name: 'Honeycomb',
-              calories: 408,
-              fat: 3.2,
-              carbs: 87,
-              protein: 6.5,
-              iron: 45
-            },
-            {
-              name: 'Donut',
-              calories: 452,
-              fat: 25.0,
-              carbs: 51,
-              protein: 4.9,
-              iron: 22
-            },
-            {
-              name: 'KitKat',
-              calories: 518,
-              fat: 26.0,
-              carbs: 65,
-              protein: 7,
-              iron: 6
-            }
-          ]
+          /*购物车详情*/
+          shopchat:{
+
+          },
+          /*订单编号*/
+          omId:"",
+          sId:'',
+          /*订单详情*/
+          OrderDetail:{
+            odId:"",
+            omId:"",
+            fId:"",
+            sId:"",
+            fQuantity:""
+          },
+          OrderMaster:{
+            omId:"",
+            buyerId:"",
+            omAmount:"",
+            omStatus:0,
+            omPayStatus:0,
+            omIsreminder:"",
+            omRemindertime:"",
+            omRemindernum:"",
+            omDesc:""
+        }
+
 
         }
       },
@@ -204,22 +143,87 @@
           this.panel = panel === this.panel ? '' : panel;
         },
         pay(){
+          this.addOrderMaster()
+        },
+        NewMsg(){
           let goEasy = new GoEasy({appkey: 'BC-fa9286de3f184384a585e6f0429788f8'});
           goEasy.publish ({
             channel: 'newsOrder',
-            message: '有顾客下单了！'
+            message: '有顾客下单了'
           });
-          this.$store.newOrderMsg =true
-          this.$router.push('')
+          this.$router.push('/CustomerOrder/aboutOrder')
         },
         backFood(){
-          this.$router.push('/CustomerOrder/sellPage');
+          this.shopchat ={}
+          window.location.href="http://192.168.43.139:8088/CustomerOrder/sellPage"
+
         },
         handleSortChange ({name, order}) {
           this.list = this.list.sort((a, b) => order === 'asc' ? a[name] - b[name] : b[name] - a[name]);
-        }
+        },
+        alipay() {
+          let returnurl = 'http://chenjie.nat300.top/CustomerOrder/alipayStatus/'+this.omId
+          window.location.href='http://47.107.115.216:8002/Api.php?sn=' + this.OrderMaster.omId + '&money=' + this.OrderMaster.omAmount + '&returnurl=' + returnurl;
+
+        },
+        addOrderMaster(){
+          this.OrderMaster.omId =randomNum(18)
+          this.omId = this.OrderMaster.omId
+          let that = this
+          this.$axios({
+            method:"post",
+            url:that.COMMON.backUrl+"orderSystem/Order/insertOrderMaster",
+            headers:{
+              'Content-type': 'application/json'
+            },
+            data: JSON.stringify(this.OrderMaster)
+          }).then((res)=>{
+            //console.log(res.data.data[0].pType);
+            that.$notify.info("创建订单成功")
+              for(let i=0;i<that.shopchat.length;i++) {
+                that.OrderDetail.odId = randomNum(18)
+                that.OrderDetail.omId = that.omId
+                that.OrderDetail.fId = that.shopchat[i].fId
+                that.OrderDetail.sId = that.sId
+                that.OrderDetail.fQuantity = that.shopchat[i].fQuantity
+                console.log(that.OrderDetail)
+                that.addOrderDetail(that.OrderDetail)
+              }
+          }).catch(function (error)
+          {
+            console.log(error)
+            //this.$notify.info("查询失败："+error)
+          })
+        },
+        addOrderDetail(OrderDetail){
+          let that =this
+          console.log("插入订单详情+++++++++++++++++++++++++")
+          this.$axios({
+            method:"post",
+            url:this.COMMON.backUrl+"orderSystem/Order/insertOrderDetail",
+            headers:{
+              'Content-type': 'application/json'
+            },
+            data: JSON.stringify(OrderDetail)
+          }).then((res)=>{
+            //console.log(res.data.data[0].pType);
+              console.log("插入成功+++++++++++++++++++++++++")
+            //that.$notify.info("创建订单详情成功")
+            this.alipay()
+
+          }).catch(function (error)
+          {
+            console.log(error)
+            //that.$notify.info("创建订单详情失败："+error)
+          })
+        },
       },
       mounted(){
+        this.shopchat = this.$route.params.shopcartContent
+        this.OrderMaster.buyerId = this.$route.params.buyerId
+        this.OrderMaster.omAmount = this.$route.params.foodAmount
+        this.sId = this.$route.params.sId
+        console.log(this.omId)
         /*获取设备宽度除于10，作为rem的单位值*/
         document.documentElement.style.fontSize = document.documentElement.clientWidth/ 10 + 'px';
         /*获取设备高度*/
@@ -246,6 +250,9 @@
     }
 </script>
 
-<style scoped>
-
+<style>
+.div_textarea .mu-input{
+  width: 8rem;
+  padding: 10px;
+}
 </style>
